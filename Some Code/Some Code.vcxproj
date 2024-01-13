@@ -129,11 +129,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
+    <ClInclude Include="carlfunctions.h" />
     <ClInclude Include="integralshelper.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="carlfunctions.cpp" />
     <ClCompile Include="integralshelper.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
