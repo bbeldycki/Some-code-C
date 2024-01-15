@@ -10,7 +10,7 @@ IntegralsHelper::~IntegralsHelper()
 
 }
 
-double_t IntegralsHelper::computeAPOnePn(std::vector<int> pList, std::vector<double_t> aList, std::vector<double_t> bList, double_t y, double_t x)
+double_t IntegralsHelper::computeAPOnePn(std::vector<int>& pList, std::vector<double_t>& aList, std::vector<double_t>& bList, double_t& y, double_t& x)
 {
 	std::vector<double_t> xi, yi;
 	double_t handlerX, handlerY, ax, ay;
@@ -59,7 +59,7 @@ double_t IntegralsHelper::computeAPOnePn(std::vector<int> pList, std::vector<dou
 	return ax - ay;
 }
 
-double_t IntegralsHelper::computeAPOnePnDoubleQuadratic(std::vector<int> pList, std::vector<double_t> aList, std::vector<double_t> bList, std::vector<double_t> fghOne, std::vector<double_t> fghTwo, double_t y, double_t x)
+double_t IntegralsHelper::computeAPOnePnDoubleQuadratic(std::vector<int>& pList, std::vector<double_t>& aList, std::vector<double_t>& bList, std::vector<double_t>& fghOne, std::vector<double_t>& fghTwo, double_t& y, double_t& x)
 {
 	std::vector<double_t> ksi, eta;
 	std::vector<double_t> fi, gi, hi;
