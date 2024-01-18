@@ -139,7 +139,7 @@ double_t IntegralsHelper::computeAPOnePnDoubleQuadratic(std::vector<int>& pList,
 	return ax - ay;
 }
 
-double_t IntegralsHelper::computeAPOnePnQuadratic(std::vector<int> pList, std::vector<double_t> aList, std::vector<double_t> bList, std::vector<double_t> fghList, double_t y, double_t x)
+double_t IntegralsHelper::computeAPOnePnQuadratic(std::vector<int>& pList, std::vector<double_t>& aList, std::vector<double_t>& bList, std::vector<double_t>& fghList, double_t& y, double_t& x)
 {
 	std::vector<double_t> xi, yi;
 	std::vector<double_t> fi, gi, hi;
@@ -222,27 +222,27 @@ double_t IntegralsHelper::computeAPOnePnQuadratic(std::vector<int> pList, std::v
 	return ax - ay;
 }
 
-double_t IntegralsHelper::computeCoeffAlfai(std::vector<double_t> fList, std::vector<double_t> gList, double_t a, double_t b, int k)
+double_t IntegralsHelper::computeCoeffAlfai(std::vector<double_t>& fList, std::vector<double_t>& gList, double_t& a, double_t& b, int& k)
 {
 	return double_t(2.0 * fList[k] * b - gList[k] * a);
 }
 
-double_t IntegralsHelper::computeCoeffBetai(std::vector<double_t> gList, std::vector<double_t> hList, double_t a, double_t b, int k)
+double_t IntegralsHelper::computeCoeffBetai(std::vector<double_t>& gList, std::vector<double_t>& hList, double_t& a, double_t& b, int& k)
 {
 	return double_t(gList[k] * b - 2.0 * hList[k] * a);
 }
 
-double_t IntegralsHelper::computeCijValue(std::vector<double_t> aList, std::vector<double_t> bList, std::vector<double_t> fghList, int k, int l)
+double_t IntegralsHelper::computeCijValue(std::vector<double_t>& aList, std::vector<double_t>& bList, std::vector<double_t>& fghList, int& k, int& l)
 {
 	return double_t(2.0 * bList[k] * bList[l] - fghList[1] * (aList[k] * bList[l] + aList[l] * bList[k]) + 2.0 * fghList[2] * aList[k] * aList[l]);
 }
 
-double_t IntegralsHelper::computeDeltaij(std::vector<double_t> fList, std::vector<double_t> gList, std::vector<double_t> hList, int k, int l)
+double_t IntegralsHelper::computeDeltaij(std::vector<double_t>& fList, std::vector<double_t>& gList, std::vector<double_t>& hList, int& k, int& l)
 {
 	return double_t(2.0 * fList[k] * hList[l] + 2.0 + fList[l] * hList[k] - gList[k] * gList[l]);
 }
 
-double_t IntegralsHelper::ComputeGammai(std::vector<double_t> fList, std::vector<double_t> gList, std::vector<double_t> hList, double_t a, double_t b, int k)
+double_t IntegralsHelper::ComputeGammai(std::vector<double_t>& fList, std::vector<double_t>& gList, std::vector<double_t>& hList, double_t& a, double_t& b, int& k)
 {
 	double_t gamma = 0;
 	gamma = fList[k] * pow(b, 2) - gList[k] * a * b + hList[k] * pow(a, 2);

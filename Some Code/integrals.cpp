@@ -101,3 +101,99 @@ double_t Integrals::ellIntCubicAllRootsReal(std::vector<int>& pList, std::vector
 		return (bList[3] * kTwC / (2.0 * dOnFo * dTwFo * dTrFo) + 2.0 * cFunctions->rcFunction(pTwoTwo, qTwoTwo) * (1.0 - rOnTw * rOnTr / 2.0 / rTwFo / rTrFo) * pow(bList[0] / dOnFo, 2));
 	}
 }
+
+double_t Integrals::ellIntCubicOneRealTwoComplexRoots(std::vector<int>& pList, std::vector<double_t>& aList, std::vector<double_t>& bList, std::vector<double_t>& fghList, double_t& ffr, double_t& y, double_t& x)
+{
+	double_t dOnFo, beta, cOnOnTw, cOnFoTw, cFoFoTw, ksi, eta, mTw;
+	double_t lmTw, lpTw, wpTw, uTw, wTw, qTw, pTw, rho;
+	double_t handlerX, handlerY;
+	double_t iTrC;
+	double_t kTwC, nTwC, amOnOnOnmTw, rTwFo, rOnTw;
+	std::vector<double_t> xi, yi;
+	try
+	{
+		if (x < y)
+		{
+			throw std::runtime_error("Error: x is lower than y. ellIntCubicOneRealTwoComplexRoots.");
+		}
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Exception caught: " << e.what() << std::endl;
+		return 0;
+	}
+	dOnFo = aList[0] * bList[3] - aList[3] * bList[0];
+	for (int i = 0; i < aList.size(); i++)
+	{
+		handlerX = aList[i] + bList[i] * x;
+		handlerY = aList[i] + bList[i] * y;
+		try
+		{
+			if (handlerX < 0)
+			{
+				throw std::runtime_error("Error: handlerX is lower than 0. ellIntCubicOneRealTwoComplexRoots.");
+			}
+			if (handlerY < 0)
+			{
+				throw std::runtime_error("Error: handlerX is lower than 0. ellIntCubicOneRealTwoComplexRoots.");
+			}
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << "Exception caught: " << e.what() << std::endl;
+			return 0;
+		}
+		xi.push_back(sqrt(handlerX));
+		yi.push_back(sqrt(handlerY));
+	}
+	try
+	{
+		if (xi[0] == 0 || yi[0] == 0)
+		{
+			throw std::runtime_error("Error: Later on both xi[0] and yi[0] will appear in the denominator so we must be sure they are not equal to 0. ellIntCubicOneRealTwoComplexRoots.");
+		}
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Exception caught: " << e.what() << std::endl;
+		return 0;
+	}
+	beta = fghList[1] * bList[0] - 2.0 * fghList[2] * aList[0];
+	cOnOnTw = intHelper->computeCijValue(aList, bList, fghList, 0, 0);
+	cOnFoTw = intHelper->computeCijValue(aList, bList, fghList, 0, 3);
+	cFoFoTw = intHelper->computeCijValue(aList, bList, fghList, 3, 3);
+	ksi = sqrt(fghList[0] + fghList[1] * x + fghList[2] * pow(x, 2));
+	eta = sqrt(fghList[0] + fghList[1] * y + fghList[2] * pow(y, 2));
+	mTw = pow((xi[0] + yi[0]) * sqrt(pow(ksi + eta, 2) - fghList[2] * pow(x - y, 2)) / (x - y), 2);
+	lmTw = mTw - beta - sqrt(2.0 * fghList[2] * cOnOnTw);
+	lpTw = mTw - beta + sqrt(2.0 * fghList[2] * cOnOnTw);
+
+	if (pList[3] == 0)
+	{
+		return 4.0 * cFunctions->rfFunction(mTw, lmTw, lpTw);
+	}
+	else
+	{
+		wpTw = mTw - bList[0] * (cOnFoTw + sqrt(cOnOnTw * cFoFoTw)) / dOnFo;
+		uTw = pow((xi[0] * eta + yi[0] * ksi) / (x - y), 2);
+		wTw = uTw - cOnOnTw * bList[3] / 2.0 / dOnFo;
+		qTw = wTw * pow(xi[3] * yi[3] / xi[0] / yi[0], 2);
+		pTw = qTw + cFoFoTw * bList[3] / 2.0 / dOnFo;
+		rho = sqrt(2.0 * fghList[2] * cOnOnTw) - beta;
+		if (pList[3] == -2)
+		{
+			iTrC = 2.0 * cFunctions->rcFunction(pTw, qTw) + 3.0 * cFunctions->rcFunction(uTw, wTw) - 6.0 * cFunctions->rfFunction(mTw, lmTw, lpTw);
+			iTrC = (2.0 * sqrt(cOnOnTw) / 3.0 / sqrt(cFoFoTw)) * ((-4.0 * bList[0] / dOnFo) * (cOnFoTw + sqrt(cOnOnTw * cFoFoTw))) * cFunctions->rjFunction(mTw, lmTw, lpTw, wpTw) + iTrC;
+			return (bList[3] * iTrC - bList[0] * ffr) / dOnFo;
+		}
+		else if (pList[3] == -4)
+		{
+			amOnOnOnmTw = intHelper->computeAPOnePnQuadratic(pList, aList, bList, fghList, y, x);
+			nTwC = sqrt(8.0 * fghList[2] / 9.0 / cOnOnTw) * (4.0 * rho * cFunctions->rdFunction(mTw, lmTw, lpTw) - 6.0 * cFunctions->rfFunction(mTw, lmTw, lpTw) + 3.0 / sqrt(uTw) + 2.0 / (xi[0] * yi[0] * sqrt(uTw)));
+			kTwC = cOnOnTw * nTwC / 2.0 - 2.0 * dOnFo * amOnOnOnmTw;
+			rTwFo = cFoFoTw / 2.0 / pow(bList[3], 2) / fghList[2];
+			rOnTw = cOnOnTw / 2.0 / pow(bList[0], 2) / fghList[2];
+			return bList[3] * kTwC / 4.0 / dOnFo / cFoFoTw + pow(bList[0] / dOnFo, 2) * (1.0 - rOnTw / rTwFo) * ffr;
+		}
+	}
+}

@@ -7,6 +7,7 @@ class Integrals
 		Integrals();
 		~Integrals();
 		double_t ellIntCubicAllRootsReal(std::vector<int>& pList, std::vector<double_t>& aList, std::vector<double_t>& bList, double_t& ffr, double_t& y, double_t& x);
+		double_t ellIntCubicOneRealTwoComplexRoots(std::vector<int>& pList, std::vector<double_t>& aList, std::vector<double_t>& bList, std::vector<double_t>& fghList, double_t& ffr, double_t& y, double_t& x);
 
 	private:
 		std::unique_ptr<CarlsonFunction> cFunctions;
