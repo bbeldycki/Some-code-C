@@ -10,7 +10,7 @@ CarlsonFunction::~CarlsonFunction()
 
 }
 
-void CarlsonFunction::iterationForRCFunction(double_t& x, double_t& y, double_t& ave, double_t& sol)
+void CarlsonFunction::iterationForRCFunction(double& x, double& y, double& ave, double& sol)
 {
 	x = 0.25 * (x + 2.0 * sqrt(x * y) + y);
 	y = 0.25 * (y + 2.0 * sqrt(x * y) + y);
@@ -18,9 +18,9 @@ void CarlsonFunction::iterationForRCFunction(double_t& x, double_t& y, double_t&
 	sol = (y - ave) / ave;
 }
 
-double_t CarlsonFunction::rcFunction(const double_t& x, const double_t& y)
+double CarlsonFunction::rcFunction(const double& x, const double& y)
 {
-	double_t newX, newY, val, ave, so, result;
+	double newX, newY, val, ave, so, result;
 	try
 	{
 		if (x < 0)
@@ -39,7 +39,7 @@ double_t CarlsonFunction::rcFunction(const double_t& x, const double_t& y)
 		{
 			throw std::runtime_error("Error: Sum of x and modile y is to large. rcFunction.");
 		}
-		else if (y < -1.7e19 || 0.0 < x < 0.01)
+		else if (y < -1.7e19 || (0.0 < x && x < 0.1))
 		{
 			throw std::runtime_error("Error: y is a large negative number and x is a small number. rcFunction.");
 		}
@@ -79,9 +79,9 @@ double_t CarlsonFunction::rcFunction(const double_t& x, const double_t& y)
 	return result;
 }
 
-void CarlsonFunction::iterationForRDFunction(double_t& x, double_t& y, double_t& z, double_t& dX, double_t& dY, double_t& dZ, double_t& ave, double_t& sol, double_t& f)
+void CarlsonFunction::iterationForRDFunction(double& x, double& y, double& z, double& dX, double& dY, double& dZ, double& ave, double& sol, double& f)
 {
-	double_t alamb = 0;
+	double alamb = 0;
 	alamb = sqrt(x * y) + sqrt(x * z) + sqrt(y * z);
 	sol = sol + f / (sqrt(z) * (z + alamb));
 	f = 0.25 * f;
@@ -95,10 +95,10 @@ void CarlsonFunction::iterationForRDFunction(double_t& x, double_t& y, double_t&
 }
 
 
-double_t CarlsonFunction::rdFunction(double_t x, double_t y, double_t z)
+double CarlsonFunction::rdFunction(double x, double y, double z)
 {
-	double_t dX, dY, dZ, ave, so, f, result;
-	double_t c2, c3, c4, c5;
+	double dX, dY, dZ, ave, so, f, result;
+	double c2, c3, c4, c5;
 	try
 	{
 		if (std::min(x, y) < 0)
@@ -109,7 +109,7 @@ double_t CarlsonFunction::rdFunction(double_t x, double_t y, double_t z)
 		{
 			throw std::runtime_error("Error: Sum of x + y or value of z was to close to 0. rdFunction.");
 		}
-		else if (std::max(x, y, z) > 4.5e25)
+		else if (std::max(x, std::max(y, z)) > 4.5e25)
 		{
 			throw std::runtime_error("Error: One of the arguments is to large. rdFunction.");
 		}
@@ -123,7 +123,7 @@ double_t CarlsonFunction::rdFunction(double_t x, double_t y, double_t z)
 	f = 1.0;
 	// First iteration
 	iterationForRDFunction(x, y, z, dX, dY, dZ, ave, so, f);
-	while (std::max(fabs(x), fabs(y), fabs(z)) > 0.05)
+	while (std::max(fabs(x), std::max(fabs(y), fabs(z))) > 0.05)
 	{
 		iterationForRDFunction(x, y, z, dX, dY, dZ, ave, so, f);
 	}
@@ -141,9 +141,9 @@ double_t CarlsonFunction::rdFunction(double_t x, double_t y, double_t z)
 	return result;
 }
 
-void CarlsonFunction::iterationForRFFunction(double_t& x, double_t& y, double_t& z, double_t& dX, double_t& dY, double_t& dZ, double_t& ave)
+void CarlsonFunction::iterationForRFFunction(double& x, double& y, double& z, double& dX, double& dY, double& dZ, double& ave)
 {
-	double_t alamb = 0;
+	double alamb = 0;
 	alamb = sqrt(x * y) + sqrt(x * z) + sqrt(y * z);
 	x = 0.25 * (x + alamb);
 	y = 0.25 * (y + alamb);
@@ -154,21 +154,21 @@ void CarlsonFunction::iterationForRFFunction(double_t& x, double_t& y, double_t&
 	dZ = (ave - z) / ave;
 }
 
-double_t CarlsonFunction::rfFunction(double_t x, double_t y, double_t z)
+double CarlsonFunction::rfFunction(double x, double y, double z)
 {
-	double_t dX, dY, dZ, ave, result;
-	double_t c2, c3;
+	double dX, dY, dZ, ave, result;
+	double c2, c3;
 	try
 	{
-		if (std::min(x, y, z) < 0)
+		if (std::min(x, std::min(y, z)) < 0)
 		{
 			throw std::runtime_error("Error: One or more argument is lower than 0. rfFunction.");
 		}
-		else if (std::min(x + y, x + z, y + z) < 1.5e-38)
+		else if (std::min(x + y, std::min(x + z, y + z)) < 1.5e-38)
 		{
 			throw std::runtime_error("Error: Sum of any pair ex (x + y) is to close to 0. rfFunction.");
 		}
-		else if (std::max(x, y, z) > 3e37)
+		else if (std::max(x, std::max(y, z)) > 3e37)
 		{
 			throw std::runtime_error("Error: One of the arguments is to large. rfFunction.");
 		}
@@ -181,7 +181,7 @@ double_t CarlsonFunction::rfFunction(double_t x, double_t y, double_t z)
 	dX = dY = dZ = ave = result = 0;
 	// First iteration
 	iterationForRFFunction(x, y, z, dX, dY, dZ, ave);
-	while (std::max(fabs(x), fabs(y), fabs(z)) > 0.08)
+	while (std::max(fabs(x), std::max(fabs(y), fabs(z))) > 0.08)
 	{
 		iterationForRFFunction(x, y, z, dX, dY, dZ, ave);
 	}
@@ -192,9 +192,9 @@ double_t CarlsonFunction::rfFunction(double_t x, double_t y, double_t z)
 	return result;
 }
 
-void CarlsonFunction::iterationForRJFunction(double_t& x, double_t& y, double_t& z, double_t& dX, double_t& dY, double_t& dZ, double_t& dP, double_t& ave, double_t& so, double_t& f, double_t& p)
+void CarlsonFunction::iterationForRJFunction(double& x, double& y, double& z, double& dX, double& dY, double& dZ, double& dP, double& ave, double& so, double& f, double& p)
 {
-	double_t alamb, alfa, beta = 0;
+	double alamb, alfa, beta = 0;
 	alamb = sqrt(x * y) + sqrt(x * z) + sqrt(y * z);
 	alfa = pow((p * (sqrt(x) + sqrt(y) + sqrt(z)) + sqrt(x) * sqrt(y) * sqrt(z)), 2);
 	beta = p * pow(p * alamb, 2);
@@ -211,22 +211,22 @@ void CarlsonFunction::iterationForRJFunction(double_t& x, double_t& y, double_t&
 	dP = (ave - p) / ave;
 }
 
-double_t CarlsonFunction::rjFunction(const double_t& x, const double_t& y, const double_t& z, const double_t& p)
+double CarlsonFunction::rjFunction(const double& x, const double& y, const double& z, const double& p)
 {
-	double_t newX, newY, newZ, dX, dY, dZ, dP, ave, so, f, newP, result;
-	double_t a1, b1, rcx;
-	double_t c2, c3, c4, c5, c6;
+	double newX, newY, newZ, dX, dY, dZ, dP, ave, so, f, newP, result;
+	double a1, b1, rcx;
+	double c2, c3, c4, c5, c6;
 	try
 	{
-		if (std::min(x, y, z) < 0)
+		if (std::min(x, std::min(y, z)) < 0)
 		{
 			throw std::runtime_error("Error: One or more argument is lower than 0. rjFunction.");
 		}
-		else if (std::min(x + y, x + z, std::min(y + z, fabs(p))) < 2.5e-13)
+		else if (std::min(x + y, std::min(x + z, std::min(y + z, fabs(p)))) < 2.5e-13)
 		{
 			throw std::runtime_error("Error: Sum of any pair ex (x + y) or abs(p) is to close to 0. rjFunction.");
 		}
-		else if (std::max(x, y, std::max(z, fabs(p))) > 9e11)
+		else if (std::max(x, std::max(y, std::max(z, fabs(p)))) > 9e11)
 		{
 			throw std::runtime_error("Error: One of the arguments is to large. rjFunction.");
 		}
@@ -247,8 +247,8 @@ double_t CarlsonFunction::rjFunction(const double_t& x, const double_t& y, const
 	}
 	else
 	{
-		newX = std::min(x, y, z);
-		newZ = std::max(x, y, z);
+		newX = std::min(x, std::min(y, z));
+		newZ = std::max(x, std::max(y, z));
 		newY = x + y + z - newX - newZ;
 		a1 = 1.0 / (newY - p);
 		b1 = a1 * (newZ - newY) * (newY - newX);
@@ -257,7 +257,7 @@ double_t CarlsonFunction::rjFunction(const double_t& x, const double_t& y, const
 	}
 	// First iteration
 	iterationForRJFunction(newX, newY, newZ, dX, dY, dZ, dP, ave, so, f, newP);
-	while (std::max(fabs(x), fabs(y), std::max(fabs(z), fabs(p))) > 0.05)
+	while (std::max(fabs(x), std::max(fabs(y), std::max(fabs(z), fabs(p)))) > 0.05)
 	{
 		iterationForRJFunction(newX, newY, newZ, dX, dY, dZ, dP, ave, so, f, newP);
 	}

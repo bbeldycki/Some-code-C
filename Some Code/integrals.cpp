@@ -1,6 +1,4 @@
 #include "integrals.h"
-#include "integralshelper.h"
-#include "carlfunctions.h"
 
 Integrals::Integrals()
 {
@@ -13,13 +11,13 @@ Integrals::~Integrals()
 
 }
 
-double_t Integrals::ellIntCubicAllRootsReal(std::vector<int>& pList, std::vector<double_t>& aList, std::vector<double_t>& bList, double_t& ffr, double_t& y, double_t& x)
+double Integrals::ellIntCubicAllRootsReal(std::vector<int>& pList, std::vector<double>& aList, std::vector<double>& bList, double& ffr, double& y, double& x)
 {
-	double_t dOnTw, dOnTr, dOnFo, dTwFo, dTrFo;
-	double_t uOne, uTwo, uThree, wTwoTwo, qTwoTwo, pTwoTwo;
-	double_t handlerX, handlerY;
-	double_t iTwC, iTrC, rOnTw, rOnTr, rTwFo, rTrFo, kTwC;
-	std::vector<double_t> xi, yi;
+	double dOnTw, dOnTr, dOnFo, dTwFo, dTrFo;
+	double uOne, uTwo, uThree, wTwoTwo, qTwoTwo, pTwoTwo;
+	double handlerX, handlerY;
+	double iTwC, iTrC, rOnTw, rOnTr, rTwFo, rTrFo, kTwC;
+	std::vector<double> xi, yi;
 	try
 	{
 		if (x < y)
@@ -102,14 +100,14 @@ double_t Integrals::ellIntCubicAllRootsReal(std::vector<int>& pList, std::vector
 	}
 }
 
-double_t Integrals::ellIntCubicOneRealTwoComplexRoots(std::vector<int>& pList, std::vector<double_t>& aList, std::vector<double_t>& bList, std::vector<double_t>& fghList, double_t& ffr, double_t& y, double_t& x)
+double Integrals::ellIntCubicOneRealTwoComplexRoots(std::vector<int>& pList, std::vector<double>& aList, std::vector<double>& bList, std::vector<double>& fghList, double& ffr, double& y, double& x)
 {
-	double_t dOnFo, beta, cOnOnTw, cOnFoTw, cFoFoTw, ksi, eta, mTw;
-	double_t lmTw, lpTw, wpTw, uTw, wTw, qTw, pTw, rho;
-	double_t handlerX, handlerY;
-	double_t iTrC;
-	double_t kTwC, nTwC, amOnOnOnmTw, rTwFo, rOnTw;
-	std::vector<double_t> xi, yi;
+	double dOnFo, beta, cOnOnTw, cOnFoTw, cFoFoTw, ksi, eta, mTw;
+	double lmTw, lpTw, wpTw, uTw, wTw, qTw, pTw, rho;
+	double handlerX, handlerY;
+	double iTrC;
+	double kTwC, nTwC, amOnOnOnmTw, rTwFo, rOnTw;
+	std::vector<double> xi, yi;
 	try
 	{
 		if (x < y)
@@ -196,4 +194,5 @@ double_t Integrals::ellIntCubicOneRealTwoComplexRoots(std::vector<int>& pList, s
 			return bList[3] * kTwC / 4.0 / dOnFo / cFoFoTw + pow(bList[0] / dOnFo, 2) * (1.0 - rOnTw / rTwFo) * ffr;
 		}
 	}
+	return 0;
 }

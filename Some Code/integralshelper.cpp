@@ -10,10 +10,10 @@ IntegralsHelper::~IntegralsHelper()
 
 }
 
-double_t IntegralsHelper::computeAPOnePn(std::vector<int>& pList, std::vector<double_t>& aList, std::vector<double_t>& bList, double_t& y, double_t& x)
+double IntegralsHelper::computeAPOnePn(std::vector<int>& pList, std::vector<double>& aList, std::vector<double>& bList, double& y, double& x)
 {
-	std::vector<double_t> xi, yi;
-	double_t handlerX, handlerY, ax, ay;
+	std::vector<double> xi, yi;
+	double handlerX, handlerY, ax, ay;
 	try
 	{
 		if (x < y)
@@ -59,13 +59,13 @@ double_t IntegralsHelper::computeAPOnePn(std::vector<int>& pList, std::vector<do
 	return ax - ay;
 }
 
-double_t IntegralsHelper::computeAPOnePnDoubleQuadratic(std::vector<int>& pList, std::vector<double_t>& aList, std::vector<double_t>& bList, std::vector<double_t>& fghOne, std::vector<double_t>& fghTwo, double_t& y, double_t& x)
+double IntegralsHelper::computeAPOnePnDoubleQuadratic(std::vector<int>& pList, std::vector<double>& aList, std::vector<double>& bList, std::vector<double>& fghOne, std::vector<double>& fghTwo, double& y, double& x)
 {
-	std::vector<double_t> ksi, eta;
-	std::vector<double_t> fi, gi, hi;
-	double_t handlerKsi, handlerEta, ax, ay;
-	double_t ksiFive = 0;
-	double_t etaFive = 0;
+	std::vector<double> ksi, eta;
+	std::vector<double> fi, gi, hi;
+	double handlerKsi, handlerEta, ax, ay;
+	double ksiFive = 0;
+	double etaFive = 0;
 	try
 	{
 		if (x < y)
@@ -139,13 +139,13 @@ double_t IntegralsHelper::computeAPOnePnDoubleQuadratic(std::vector<int>& pList,
 	return ax - ay;
 }
 
-double_t IntegralsHelper::computeAPOnePnQuadratic(std::vector<int>& pList, std::vector<double_t>& aList, std::vector<double_t>& bList, std::vector<double_t>& fghList, double_t& y, double_t& x)
+double IntegralsHelper::computeAPOnePnQuadratic(std::vector<int>& pList, std::vector<double>& aList, std::vector<double>& bList, std::vector<double>& fghList, double& y, double& x)
 {
-	std::vector<double_t> xi, yi;
-	std::vector<double_t> fi, gi, hi;
-	double_t handlerX, handlerY, handlerKsi, handlerEta, ksi, eta, ax, ay;
-	double_t ksiFive = 0;
-	double_t etaFive = 0;
+	std::vector<double> xi, yi;
+	std::vector<double> fi, gi, hi;
+	double handlerX, handlerY, handlerKsi, handlerEta, ksi, eta, ax, ay;
+	double ksiFive = 0;
+	double etaFive = 0;
 	try
 	{
 		if (x < y)
@@ -222,29 +222,29 @@ double_t IntegralsHelper::computeAPOnePnQuadratic(std::vector<int>& pList, std::
 	return ax - ay;
 }
 
-double_t IntegralsHelper::computeCoeffAlfai(std::vector<double_t>& fList, std::vector<double_t>& gList, double_t& a, double_t& b, int& k)
+double IntegralsHelper::computeCoeffAlfai(std::vector<double>& fList, std::vector<double>& gList, double& a, double& b, int k)
 {
-	return double_t(2.0 * fList[k] * b - gList[k] * a);
+	return double(2.0 * fList[k] * b - gList[k] * a);
 }
 
-double_t IntegralsHelper::computeCoeffBetai(std::vector<double_t>& gList, std::vector<double_t>& hList, double_t& a, double_t& b, int& k)
+double IntegralsHelper::computeCoeffBetai(std::vector<double>& gList, std::vector<double>& hList, double& a, double& b, int k)
 {
-	return double_t(gList[k] * b - 2.0 * hList[k] * a);
+	return double(gList[k] * b - 2.0 * hList[k] * a);
 }
 
-double_t IntegralsHelper::computeCijValue(std::vector<double_t>& aList, std::vector<double_t>& bList, std::vector<double_t>& fghList, int& k, int& l)
+double IntegralsHelper::computeCijValue(std::vector<double>& aList, std::vector<double>& bList, std::vector<double>& fghList, int k, int l)
 {
-	return double_t(2.0 * bList[k] * bList[l] - fghList[1] * (aList[k] * bList[l] + aList[l] * bList[k]) + 2.0 * fghList[2] * aList[k] * aList[l]);
+	return double(2.0 * bList[k] * bList[l] - fghList[1] * (aList[k] * bList[l] + aList[l] * bList[k]) + 2.0 * fghList[2] * aList[k] * aList[l]);
 }
 
-double_t IntegralsHelper::computeDeltaij(std::vector<double_t>& fList, std::vector<double_t>& gList, std::vector<double_t>& hList, int& k, int& l)
+double IntegralsHelper::computeDeltaij(std::vector<double>& fList, std::vector<double>& gList, std::vector<double>& hList, int k, int l)
 {
-	return double_t(2.0 * fList[k] * hList[l] + 2.0 + fList[l] * hList[k] - gList[k] * gList[l]);
+	return double(2.0 * fList[k] * hList[l] + 2.0 + fList[l] * hList[k] - gList[k] * gList[l]);
 }
 
-double_t IntegralsHelper::ComputeGammai(std::vector<double_t>& fList, std::vector<double_t>& gList, std::vector<double_t>& hList, double_t& a, double_t& b, int& k)
+double IntegralsHelper::ComputeGammai(std::vector<double>& fList, std::vector<double>& gList, std::vector<double>& hList, double& a, double& b, int k)
 {
-	double_t gamma = 0;
+	double gamma = 0;
 	gamma = fList[k] * pow(b, 2) - gList[k] * a * b + hList[k] * pow(a, 2);
 	try
 	{

@@ -6,13 +6,13 @@ class IntegralsHelper
 	public:
 		IntegralsHelper();
 		~IntegralsHelper();
-		double_t computeAPOnePn(std::vector<int>& pList, std::vector<double_t>& aList, std::vector<double_t>& bList, double_t& y, double_t& x);
-		double_t computeAPOnePnDoubleQuadratic(std::vector<int>& pList, std::vector<double_t>& aList, std::vector<double_t>& bList, std::vector<double_t>& fghOne, std::vector<double_t>& fghTwo, double_t& y, double_t& x);
-		double_t computeAPOnePnQuadratic(std::vector<int>& pList, std::vector<double_t>& aList, std::vector<double_t>& bList, std::vector<double_t>& fghList, double_t& y, double_t& x);
-		double_t computeCoeffAlfai(std::vector<double_t>& fList, std::vector<double_t>& gList, double_t& a, double_t& b, int& k);
-		double_t computeCoeffBetai(std::vector<double_t>& gList, std::vector<double_t>& hList, double_t& a, double_t& b, int& k);
-		double_t computeCijValue(std::vector<double_t>& aList, std::vector<double_t>& bList, std::vector<double_t>& fghList, int& k, int& l);
-		double_t computeDeltaij(std::vector<double_t>& fList, std::vector<double_t>& gList, std::vector<double_t>& hList, int& k, int& l);
-		double_t ComputeGammai(std::vector<double_t>& fList, std::vector<double_t>& gList, std::vector<double_t>& hList, double_t& a, double_t& b, int& k);
+		double computeAPOnePn(std::vector<int>& pList, std::vector<double>& aList, std::vector<double>& bList, double& y, double& x);
+		double computeAPOnePnDoubleQuadratic(std::vector<int>& pList, std::vector<double>& aList, std::vector<double>& bList, std::vector<double>& fghOne, std::vector<double>& fghTwo, double& y, double& x);
+		double computeAPOnePnQuadratic(std::vector<int>& pList, std::vector<double>& aList, std::vector<double>& bList, std::vector<double>& fghList, double& y, double& x);
+		double computeCoeffAlfai(std::vector<double>& fList, std::vector<double>& gList, double& a, double& b, int k);
+		double computeCoeffBetai(std::vector<double>& gList, std::vector<double>& hList, double& a, double& b, int k);
+		double computeCijValue(std::vector<double>& aList, std::vector<double>& bList, std::vector<double>& fghList, int k, int l);
+		double computeDeltaij(std::vector<double>& fList, std::vector<double>& gList, std::vector<double>& hList, int k, int l);
+		double ComputeGammai(std::vector<double>& fList, std::vector<double>& gList, std::vector<double>& hList, double& a, double& b, int k);
 
 };
