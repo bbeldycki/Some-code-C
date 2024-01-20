@@ -6,10 +6,10 @@ class CarlsonFunction
 	public:
 		CarlsonFunction();
 		~CarlsonFunction();
-		double rcFunction(const double& x, const double& y);
+		double rcFunction(double x, double y);
 		double rdFunction(double x, double y, double z);
 		double rfFunction(double x, double y, double z);
-		double rjFunction(const double& x, const double& y, const double& z, const double& p);
+		double rjFunction(double x, double y, double z, double p);
 
 	private:
 		void iterationForRCFunction(double& x, double& y, double& ave, double& sol);

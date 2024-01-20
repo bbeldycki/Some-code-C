@@ -18,7 +18,7 @@ void CarlsonFunction::iterationForRCFunction(double& x, double& y, double& ave, 
 	sol = (y - ave) / ave;
 }
 
-double CarlsonFunction::rcFunction(const double& x, const double& y)
+double CarlsonFunction::rcFunction(double x, double y)
 {
 	double newX, newY, val, ave, so, result;
 	try
@@ -211,7 +211,7 @@ void CarlsonFunction::iterationForRJFunction(double& x, double& y, double& z, do
 	dP = (ave - p) / ave;
 }
 
-double CarlsonFunction::rjFunction(const double& x, const double& y, const double& z, const double& p)
+double CarlsonFunction::rjFunction(double x, double y, double z, double p)
 {
 	double newX, newY, newZ, dX, dY, dZ, dP, ave, so, f, newP, result;
 	double a1, b1, rcx;

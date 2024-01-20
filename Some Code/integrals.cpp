@@ -196,3 +196,123 @@ double Integrals::ellIntCubicOneRealTwoComplexRoots(std::vector<int>& pList, std
 	}
 	return 0;
 }
+
+double Integrals::ellIntQuarticAllRootsReal(std::vector<int>& pList, std::vector<double>& aList, std::vector<double>& bList, double& ffr, double& y, double& x)
+{
+	double dOnTw, dOnTr, dOnFo, dOnFv;
+	double uOnTw, uOnTr, uOnFo;
+	double wOnTwTw, qOnTwTw, pOnTwTw, iTrP;
+	double handlerX, handlerY;
+	double dTwFv, dTrFv, dFoFv, wTwTw, qTwTw, pTwTw;
+	double iTwo, iThree;
+	double dTwFo, dTwFv, dTrFo, dTrFv, dFoFv, rOnTw, rOnTr, rTwFv, rTrFv;
+	double aOnOnOnmOnmTw;
+	double result = 0;
+	std::vector<double> xi, yi;
+	try
+	{
+		if (x < y)
+		{
+			throw std::runtime_error("Error: x is lower than y. ellIntQuarticAllRootsReal.");
+		}
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Exception caught: " << e.what() << std::endl;
+		return 0;
+	}
+	dOnTw = aList[0] * bList[1] - aList[1] * bList[0];
+	dOnTr = aList[0] * bList[2] - aList[2] * bList[0];
+	dOnFo = aList[0] * bList[3] - aList[3] * bList[0];
+	dOnFv = aList[0] * bList[4] - aList[4] * bList[0];
+	for (int i = 0; i < aList.size(); i++)
+	{
+		handlerX = aList[i] + bList[i] * x;
+		handlerY = aList[i] + bList[i] * y;
+		try
+		{
+			if (handlerX < 0)
+			{
+				throw std::runtime_error("Error: handlerX is lower than 0. ellIntQuarticAllRootsReal.");
+			}
+			if (handlerY < 0)
+			{
+				throw std::runtime_error("Error: handlerX is lower than 0. ellIntQuarticAllRootsReal.");
+			}
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << "Exception caught: " << e.what() << std::endl;
+			return 0;
+		}
+		xi.push_back(sqrt(handlerX));
+		yi.push_back(sqrt(handlerY));
+	}
+	uOnTw = (xi[0] * yi[1] * yi[2] * yi[3] + yi[0] * yi[1] * xi[2] * xi[3]) / (x - y);
+	uOnTr = (xi[1] * yi[2] * yi[1] * yi[2] + yi[0] * yi[2] * xi[1] * xi[3]) / (x - y);
+	uOnFo = (xi[1] * yi[3] * yi[1] * yi[1] + yi[0] * yi[3] * xi[1] * xi[2]) / (x - y);
+	try
+	{
+		if (bList[0] == 0 || bList[1] == 0 || bList[2] == 0 || bList[4] == 0 || dOnFv == 0 || uOnFo == 0 || xi[0] == 0 || yi[0] == 0 || xi[3] == 0 || yi[3] == 0)
+		{
+			throw std::runtime_error("Error: All the numbers in if statement will appear in denominator later on. We must be sure they are not 0. ellIntQuarticAllRootsReal.");
+		}
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Exception caught: " << e.what() << std::endl;
+		return 0;
+	}
+
+	if (aList[4] == 1.0 && bList[4] == 0.0)
+	{
+		wOnTwTw = pow(uOnTw, 2) - bList[1] * dOnTr * dOnFo / bList[0];
+		qOnTwTw = wOnTwTw / pow(xi[0] * yi[0], 2);
+		pOnTwTw = qOnTwTw + bList[1] * bList[2] * bList[3] / bList[0];
+		iTrP = -2.0 * dOnTw * dOnTr * dOnFo * cFunctions->rjFunction(pow(uOnTw, 2), pow(uOnTr, 2), pow(uOnFo, 2), wOnTwTw) / 3.0 / bList[0] + 2.0 * cFunctions->rcFunction(pOnTwTw, qOnTwTw);
+		if (pList[4] == 0)
+		{
+			return 2.0 * cFunctions->rcFunction(pOnTwTw, qOnTwTw);
+		}
+		else if (pList[4] == -2)
+		{
+			return (bList[4] * iTrP - bList[0] * 2.0 * ffr) / dOnFv;
+		}
+	}
+	else
+	{
+		dTwFv = aList[1] * bList[4] - aList[4] * bList[1];
+		dTrFv = aList[2] * bList[4] - aList[4] * bList[2];
+		dFoFv = aList[3] * bList[4] - aList[4] * bList[3];
+		wTwTw = pow(uOnTw, 2) - dOnTr * dOnFo * dTwFv / dOnFv;
+		qTwTw = wTwTw * pow(xi[4] * yi[4] / xi[0] / yi[0], 2);
+		pTwTw = qTwTw + dTwFv * dTrFv * dFoFv / dOnFv;
+		iTwo = 2.0 * dOnTw * dOnTr * cFunctions->rdFunction(pow(uOnTw, 2), pow(uOnTr, 2), pow(uOnFo, 2)) / 2.0 + 2.0 * xi[0] * yi[0] / xi[3] / yi[3] / uOnFo;
+		iThree = 2.0 * dOnTw * dOnTr * dOnFo * cFunctions->rjFunction(pow(uOnTw, 2), pow(uOnTr, 2), pow(uOnFo, 2), wTwTw) / 3.0 / dOnFv + 2.0 * cFunctions->rcFunction(pTwTw, qTwTw);
+		if (pList[4] == 0)
+		{
+			return 2.0 * cFunctions->rfFunction(pow(uOnTw, 2), pow(uOnTr, 2), pow(uOnFo, 2));
+		}
+		else if (pList[4] == -2)
+		{
+			return (bList[4] * iThree - bList[0] * 2.0 * ffr) / dOnFv;
+		}
+		else if(pList[4] == -4)
+		{
+			dTwFo = aList[1] * bList[3] - aList[3] * bList[1];
+			dTwFv = aList[1] * bList[4] - aList[4] * bList[1];
+			dTrFo = aList[2] * bList[3] - aList[3] * bList[2];
+			dTrFv = aList[2] * bList[4] - aList[4] * bList[2];
+			dFoFv = aList[3] * bList[4] - aList[4] * bList[3];
+			rOnTw = dOnTw / bList[0] / bList[1];
+			rOnTr = dOnTr / bList[0] / bList[2];
+			rTwFv = dTwFv / bList[1] / bList[4];
+			rTrFv = dTrFv / bList[2] / bList[4];
+			aOnOnOnmOnmTw = intHelper->computeAPOnePn(pList, aList, bList, y, x);
+			result = pow(bList[4], 2) * dTwFo * dTrFo * iTwo / (2.0 * dOnFv * dTwFv * dTrFv * dFoFv);
+			result = pow(bList[0], 2) * 2.0 * ffr * (1.0 - rOnTw * rOnTr / (2.0 * rTwFv * rTrFv)) + result;
+			result = result - pow(bList[4], 2) * aOnOnOnmOnmTw / dOnFv / dTwFv / dTrFv;
+			return result;
+		}
+	}
+}
