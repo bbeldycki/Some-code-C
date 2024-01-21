@@ -316,3 +316,130 @@ double Integrals::ellIntQuarticAllRootsReal(std::vector<int>& pList, std::vector
 		}
 	}
 }
+
+double Integrals::ellIntQuarticTwoRealTwoComplexRoots(std::vector<int>& pList, std::vector<double>& aList, std::vector<double>& bList, std::vector<double>& fghList, double& ffr, double& y, double& x)
+{
+	double dOnFo, dOnFv, dFoFv, cOnOn, cOnFo, cOnFv, cFoFo, cFvFv, ksi, eta, mTw, lmTw, lpTw, wpTw, uTw;
+	double wOnTw, rho, mTwRho, qOnTw, pOnTw, iTrC;
+	double handlerX, handlerY;
+	double wTw, qTw, pTw, iTwo, iThree, result;
+	std::vector<double> xi, yi;
+	try
+	{
+		if (x < y)
+		{
+			throw std::runtime_error("Error: x is lower than y. ellIntQuarticTwoRealTwoComplexRoots.");
+		}
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Exception caught: " << e.what() << std::endl;
+		return 0;
+	}
+	dOnFo = aList[0] * bList[3] - aList[3] * bList[0];
+	for (int i = 0; i < aList.size(); i++)
+	{
+		handlerX = aList[i] + bList[i] * x;
+		handlerY = aList[i] + bList[i] * y;
+		try
+		{
+			if (handlerX < 0)
+			{
+				throw std::runtime_error("Error: handlerX is lower than 0. ellIntQuarticTwoRealTwoComplexRoots.");
+			}
+			if (handlerY < 0)
+			{
+				throw std::runtime_error("Error: handlerX is lower than 0. ellIntQuarticTwoRealTwoComplexRoots.");
+			}
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << "Exception caught: " << e.what() << std::endl;
+			return 0;
+		}
+		xi.push_back(sqrt(handlerX));
+		yi.push_back(sqrt(handlerY));
+	}
+	dOnFo = aList[0] * bList[3] - aList[3] * bList[0];
+	dOnFv = aList[0] * bList[4] - aList[4] * bList[0];
+	dFoFv = aList[3] * bList[4] - aList[4] * bList[3];
+	cOnOn = intHelper->computeCijValue(aList, bList, fghList, 0, 0);
+	cOnFo = intHelper->computeCijValue(aList, bList, fghList, 0, 3);
+	cOnFv = intHelper->computeCijValue(aList, bList, fghList, 0, 4);
+	cFoFo = intHelper->computeCijValue(aList, bList, fghList, 3, 3);
+	cFvFv = intHelper->computeCijValue(aList, bList, fghList, 4, 4);
+	try
+	{
+		if (dOnFv == 0.0 || bList[0] == 0.0 || fghList[2] == 0.0 || xi[0] == 0.0 || yi[0] == 0.0 || xi[3] == 0.0 || yi[3] == 0.0 || cFoFo == 0.0 || cFvFv == 0.0)
+		{
+			throw std::runtime_error("Error: Later on a number of variables will appear in the denominator so we must be sure they are not equal to 0. ellIntCubicOneRealTwoComplexRoots.");
+		}
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Exception caught: " << e.what() << std::endl;
+		return 0;
+	}
+	ksi = sqrt(fghList[0] + fghList[1] * x + fghList[2] * pow(x, 2));
+	eta = sqrt(fghList[0] + fghList[1] * y + fghList[2] * pow(y, 2));
+	mTw = pow((xi[0] * yi[3] + yi[0] * xi[3]) * sqrt(pow(ksi + eta, 2) - fghList[2] * pow(x - y, 2)) / (x - y), 2);
+	lmTw = mTw + cOnFo - sqrt(cOnOn * cFoFo);
+	lpTw = mTw + cOnFo + sqrt(cOnOn * cFoFo);
+	wpTw = mTw + dOnFo * (cOnFv * sqrt(cOnOn * cFvFv)) / dOnFv;
+	uTw = pow((xi[0] * xi[3] * eta + yi[0] * yi[3] * ksi) / (x - y), 2);
+	try
+	{
+		if (uTw == 0.0)
+		{
+			throw std::runtime_error("Error: Later on u2 will appear in the denominator so we must be sure they are not equal to 0. ellIntCubicOneRealTwoComplexRoots.");
+		}
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Exception caught: " << e.what() << std::endl;
+		return 0;
+	}
+	if (aList[4] == 1.0 and bList[4] == 0.0)
+	{
+		wOnTw = uTw - cOnOn * bList[3] / 2.0 / bList[0];
+		rho = dOnFo * (fghList[1] * bList[0] - 2.0 * fghList[2] * aList[0] - sqrt(2.0 * fghList[2] * cOnOn)) / bList[0];
+		mTwRho = mTw + rho;
+		qOnTw = wOnTw / pow(xi[0], 2) / pow(yi[0], 2);
+		pOnTw = qOnTw + fghList[2] * bList[3] / bList[0];
+		if (pList[4] == 0)
+		{
+			return 4.0 * cFunctions->rfFunction(mTw, lmTw, lpTw);
+		}
+		else if (pList[4] == -2)
+		{
+			iTrC = sqrt(2.0 * cOnOn / 9.0 / fghList[2]) * (4.0 * rho * cFunctions->rjFunction(mTw, lmTw, lpTw, mTwRho) - 6.0 * cFunctions->rfFunction(mTw, lmTw, lpTw) + 3.0 * cFunctions->rcFunction(uTw, wOnTw));
+			iTrC = 2.0 * cFunctions->rcFunction(pOnTw, qOnTw) + iTrC;
+			return (bList[4] * iTrC - bList[0] * ffr) / dOnFv;
+		}
+	}
+	else
+	{
+		wTw = uTw - cOnOn * dFoFv / 2.0 / dOnFv;
+		qTw = wTw * pow(xi[4] * yi[4] / xi[0] / yi[0], 2);
+		pTw = qTw + cFvFv * dFoFv / 2.0 / dOnFv;
+		if (pList[4] == 0)
+		{
+			return 4.0 * cFunctions->rfFunction(mTw, lmTw, lpTw);
+		}
+		else if (pList[4] == -2)
+		{
+			iThree = (2.0 * sqrt(cOnOn) / 3.0 / sqrt(cFvFv));
+			iThree = (4.0 * dOnFo / dOnFv * (cOnFv + sqrt(cOnOn * cFvFv)) * cFunctions->rjFunction(mTw, lmTw, lpTw, wpTw) - 6.0 * cFunctions->rfFunction(mTw, lmTw, lpTw) + 3.0 * cFunctions->rcFunction(uTw, wTw)) * iThree;
+			iThree = 2.0 * cFunctions->rcFunction(pTw, qTw) + iThree;
+			return (bList[4] * iThree - bList[0] * ffr) / dOnFv;
+		}
+		else if (pList[4] == -4)
+		{
+			iTwo = (2.0 * sqrt(cOnOn) / 3.0 / sqrt(cFoFo)) * (4.0 * (cOnFo + sqrt(cOnOn * cFoFo)) * cFunctions->rdFunction(mTw, lmTw, lpTw) - 6.0 * cFunctions->rfFunction(mTw, lmTw, lpTw) + 3.0 / sqrt(uTw));
+			iTwo = 2.0 * xi[0] * yi[0] / xi[3] / yi[3] / sqrt(uTw) + iTwo;
+			result = pow(bList[4], 2) * cFoFo * iTwo / 2.0 / dOnFv / dFoFv / cFvFv + pow(bList[0], 2) * ffr * (1.0 - cOnOn * pow(bList[4], 2) / 2.0 / cFvFv / pow(bList[0], 2));
+			result = result - 2.0 * pow(bList[4], 2) * intHelper->computeAPOnePnQuadratic(pList, aList, bList, fghList, y, x) / dOnFv / cFvFv;
+			return result;
+		}
+	}
+}
