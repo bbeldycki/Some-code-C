@@ -443,3 +443,172 @@ double Integrals::ellIntQuarticTwoRealTwoComplexRoots(std::vector<int>& pList, s
 		}
 	}
 }
+
+double Integrals::ellIntQuarticAllComplexRoots(std::vector<int>& pList, std::vector<double>& aList, std::vector<double>& bList, std::vector<double>& fghOneList, std::vector<double>& fghTwoList, double& ffr, double& y, double& x)
+{;
+	double handlerKsi, handlerEta;
+	std::vector<double> fi, gi, hi, ksi, eta, theta, dzeta;
+	double ksiOnep, etaOnep, u, m, dOnOn, dTwTw, dOnTw, delta, deltaP, deltaAm, lmTw, lpTw;
+	double gie, alfaOnFv, alfaTwFv, betaOnFv, betaTwFv, gammaOn, gammaTw;
+	double bLambda, bSigTw, psi, bix, bes, mu, bet, vTw, bTw, aTw, beh, omega;
+	double ksiFv, etaFv;
+	double result;
+	try
+	{
+		if (x < y)
+		{
+			throw std::runtime_error("Error: x is lower than y. ellIntQuarticAllComplexRoots.");
+		}
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Exception caught: " << e.what() << std::endl;
+		return 0;
+	}
+	
+	fi.push_back(fghOneList[0]);
+	fi.push_back(fghTwoList[0]);
+	gi.push_back(fghOneList[1]);
+	gi.push_back(fghTwoList[1]);
+	hi.push_back(fghOneList[2]);
+	hi.push_back(fghTwoList[2]);
+	for (int i = 0; i < fi.size(); i++)
+	{
+		handlerKsi = fi[i] + gi[i] * x + hi[i] * pow(x, 2);
+		handlerEta = fi[i] + gi[i] * y + hi[i] * pow(y, 2);
+		try
+		{
+			if (handlerKsi < 0)
+			{
+				throw std::runtime_error("Error: handlerX is lower than 0. ellIntQuarticAllComplexRoots.");
+			}
+			if (handlerEta < 0)
+			{
+				throw std::runtime_error("Error: handlerX is lower than 0. ellIntQuarticAllComplexRoots.");
+			}
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << "Exception caught: " << e.what() << std::endl;
+			return 0;
+		}
+		ksi.push_back(sqrt(handlerKsi));
+		eta.push_back(sqrt(handlerEta));
+		theta.push_back(handlerKsi + handlerEta - hi[i] * pow(x - y, 2));
+	}
+	ksiOnep = (gi[0] + 2.0 * hi[0] * x) / 2.0 / ksi[0];
+	etaOnep = (gi[0] + 2.0 * hi[0] * y) / 2.0 / eta[0];
+	for (int i = 0; i < fi.size(); i++)
+	{
+		handlerKsi = pow(ksi[i] + eta[i], 2) - 2.0 * hi[0] * pow(x - y, 2);
+		try
+		{
+			if (handlerKsi < 0)
+			{
+				throw std::runtime_error("Error: handlerX is lower than 0. ellIntQuarticAllComplexRoots.");
+			}
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << "Exception caught: " << e.what() << std::endl;
+			return 0;
+		}
+		dzeta.push_back(sqrt(handlerKsi));
+	}
+	u = (ksi[0] * eta[1] + eta[0] * ksi[0]) / (x - y);
+	m = dzeta[0] * dzeta[1] / (x - y);
+	dOnOn = intHelper->computeDeltaij(fi, gi, hi, 0, 0);
+	dTwTw = intHelper->computeDeltaij(fi, gi, hi, 1, 1);
+	dOnTw = intHelper->computeDeltaij(fi, gi, hi, 0, 1);
+	delta = sqrt(pow(dOnTw, 2) - dOnOn * dTwTw);
+	deltaP = dOnTw + delta;
+	deltaAm = dOnTw - delta;
+	lmTw = pow(m, 2) + deltaAm;
+	lpTw = pow(m, 2) + deltaP;
+	if (pList[4] == 0)
+	{
+		return 4.0 * cFunctions->rfFunction(pow(m, 2), lmTw, lpTw);
+	}
+	try
+	{
+		if (u == 0.0)
+		{
+			throw std::runtime_error("Error: u is equal to 0 and we will use it in denominator. ellIntQuarticAllComplexRoots.");
+		}
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Exception caught: " << e.what() << std::endl;
+		return 0;
+	}
+	gie = 2.0 * delta * deltaP * cFunctions->rdFunction(pow(m, 2), lmTw, lpTw) / 3.0 + delta / 2.0 / u + (dOnTw * theta[0] - dOnOn * theta[1]) / 4.0 / ksi[0] / eta[0] / u;
+	alfaOnFv = intHelper->computeCoeffAlfai(fi, gi, aList[4], bList[4], 0);
+	betaOnFv = intHelper->computeCoeffBetai(gi, hi, aList[4], bList[4], 0);
+	alfaTwFv = intHelper->computeCoeffAlfai(fi, gi, aList[4], bList[4], 1);
+	betaTwFv = intHelper->computeCoeffBetai(gi, hi, aList[4], bList[4], 1);
+	gammaOn = intHelper->ComputeGammai(fi, gi, hi, aList[4], bList[4], 0);
+	gammaTw = intHelper->ComputeGammai(fi, gi, hi, aList[4], bList[4], 1);
+	if (aList[4] == 1.0 && bList[4] == 0.0)
+	{
+		try
+		{
+			if (hi[0] == 0.0)
+			{
+				throw std::runtime_error("Error: Hi[0] is equal to 0 and we will use it in denominator. ellIntQuarticAllComplexRoots.");
+			}
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << "Exception caught: " << e.what() << std::endl;
+			return 0;
+		}
+	}
+	bLambda = dOnOn * hi[1] / hi[0];
+	bSigTw = pow(m, 2) + bLambda;
+	psi = gi[0] * hi[1] - gi[1] * hi[0];
+	bix = -1.0 * (ksiOnep * ksi[1] + etaOnep * eta[1]) / (x - y);
+	bes = (pow(m, 2) + dOnOn) / 2.0 - pow(u, 2);
+	mu = hi[0] / ksi[0] / eta[0];
+	bet = mu * bes + 2.0 * hi[0] * hi[1];
+	vTw = pow(mu, 2) * (pow(bes, 2) + bLambda * pow(u, 2));
+	bTw = (pow(bes / u, 2) + bLambda) * bSigTw * pow(u, 2);
+	aTw = bTw + bLambda * (deltaP - bLambda) * (bLambda - deltaAm);
+	beh = dOnOn * psi * (cFunctions->rjFunction(pow(m, 2), lmTw, lpTw, bSigTw) / 3.0 + cFunctions->rcFunction(aTw, bTw) / 2.0) / pow(hi[0], 2) - bix * cFunctions->rcFunction(pow(bet, 2), vTw);
+	if (pList[4] == -2)
+	{
+		return -2.0 * (bList[4] * beh + betaOnFv * ffr / gammaOn);
+	}
+	else if (pList[4] = -4)
+	{
+		omega = gie - deltaP * ffr + ksiOnep * ksi[0] - etaOnep * eta[0];
+		result = bList[4] * (betaOnFv / gammaOn + betaTwFv / gammaTw) * beh + pow(betaOnFv / gammaOn, 2) * ffr;
+		result = result + pow(bList[4], 2) * (omega - bList[4] * intHelper->computeAPOnePnDoubleQuadratic(pList, aList, bList, fghOneList, fghTwoList, y, x)) / gammaOn / gammaTw;
+		return result;
+	}
+	else
+	{
+		bLambda = dOnOn * gammaTw / gammaOn;
+		bSigTw = pow(m, 2) + bLambda;
+		psi = (alfaOnFv * betaTwFv - alfaTwFv * betaOnFv) / 2.0;
+		ksiFv = aList[4] + bList[4] * x;
+		etaFv = aList[4] + bList[4] * y;
+		bix = (ksiFv * (alfaOnFv + betaOnFv * y) * eta[1] / eta[0] + etaFv * (alfaOnFv + betaOnFv * x) * ksi[1] / ksi[0]) / 2.0 / (x - y);
+		bes = (pow(m, 2) + dOnTw) / 2.0 - pow(u, 2);
+		mu = gammaOn * ksiFv * etaFv / ksi[0] / eta[0];
+		bet = mu * bes + 2.0 * gammaOn * gammaTw;
+		vTw = pow(mu, 2) * (pow(bes, 2) + bLambda * pow(u, 2));
+		bTw = (pow(bes / u, 2) + bLambda) * pow(bSigTw, 2);
+		aTw = bTw + bLambda * (deltaP - bLambda) * (bLambda - deltaAm);
+		beh = dOnOn * psi * (cFunctions->rjFunction(pow(m, 2), lmTw, lpTw, bSigTw) / 3.0 + cFunctions->rcFunction(aTw, bTw) / 2.0) / pow(gammaOn, 2) - bix * cFunctions->rcFunction(pow(bet, 2), vTw);
+		if (pList[4] == -2)
+		{
+			return -2.0 * (bList[4] * beh + betaOnFv * ffr / gammaOn);
+		}
+		else if (pList[4] == -4)
+		{
+			omega = gie - deltaP * ffr + ksiOnep * ksi[0] - etaOnep * eta[0];
+			result = bList[4] * (betaOnFv / gammaOn + betaTwFv / gammaTw) * beh + pow(betaOnFv / gammaOn, 2) * ffr;
+			result = result + pow(bList[4], 2) * (omega - bList[4] * intHelper->computeAPOnePnDoubleQuadratic(pList, aList, bList, fghOneList, fghTwoList, y, x)) / gammaOn / gammaTw;
+		}
+	}
+}
