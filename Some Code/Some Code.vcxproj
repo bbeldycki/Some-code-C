@@ -132,6 +132,7 @@
     <ClInclude Include="carlfunctions.h" />
     <ClInclude Include="integrals.h" />
     <ClInclude Include="integralshelper.h" />
+    <ClInclude Include="roots.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +141,7 @@
     <ClCompile Include="integrals.cpp" />
     <ClCompile Include="integralshelper.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="roots.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

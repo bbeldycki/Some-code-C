@@ -30,6 +30,9 @@
     <ClInclude Include="integrals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="roots.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -45,6 +48,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="integrals.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="roots.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

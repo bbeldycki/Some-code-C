@@ -2,8 +2,8 @@
 
 Integrals::Integrals()
 {
-	std::unique_ptr<CarlsonFunction> cFunctions = std::make_unique<CarlsonFunction>();
-	std::unique_ptr<IntegralsHelper> intHelper = std::make_unique<IntegralsHelper>();
+	cFunctions = std::make_unique<CarlsonFunction>();
+	intHelper = std::make_unique<IntegralsHelper>();
 }
 
 Integrals::~Integrals()
